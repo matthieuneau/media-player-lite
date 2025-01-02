@@ -16,6 +16,7 @@ python-jose = "^3.3.0"
 
 [tool.poetry.group.dev.dependencies]
 fastapi = "^0.115.6"
+alembic = "^1.14.0"
 
 [build-system]
 requires = ["poetry-core"]
