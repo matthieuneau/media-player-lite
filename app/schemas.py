@@ -2,6 +2,26 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 
+class PlaylistBase(BaseModel):
+    name: str
+
+
+class PlaylistCreate(PlaylistBase):
+    pass
+
+
+class PlaylistUpdate(BaseModel):
+    name: Optional[str] = None
+
+
+class PlaylistOut(PlaylistBase):
+    id: int
+    user_id: int
+
+    class Config:
+        model_config = {"from_attributes": True}
+
+
 class UserBase(BaseModel):
     username: str
     email: EmailStr
