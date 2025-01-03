@@ -11,11 +11,18 @@ class UserCreate(UserBase):
     password: str
 
 
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+
+
 class UserOut(UserBase):
     id: int
+    password: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}
 
 
 class SongBase(BaseModel):
@@ -42,4 +49,4 @@ class SongOut(SongBase):
     id: int
 
     class Config:
-        orm_mode = True
+        model_config = {"from_attributes": True}

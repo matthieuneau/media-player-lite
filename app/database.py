@@ -2,7 +2,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# TODO: replace with user and password
 SQLALCHEMY_DATABASE_URL = "postgresql://my_user:my_password@localhost/media_player"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)

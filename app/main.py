@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routes import songs
+from app.routes import songs, users, playlists
 
 app = FastAPI()
 
@@ -19,4 +19,6 @@ def read_root():
 
 
 # Include the router AFTER defining the routes
-app.include_router(songs.router)
+app.include_router(songs.router, tags=["Songs"])
+app.include_router(users.router, tags=["Users"])
+app.include_router(playlists.router, tags=["Playlists"])
