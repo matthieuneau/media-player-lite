@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import model_validator
 from sqlalchemy.orm import Session
 from app import crud, database
 from app import schemas
+from app.models import User
 from app.schemas import UserOut, UserUpdate, UserCreate
 from passlib.context import CryptContext
 from app.auth import TokenResponse, create_access_token, get_current_user
@@ -80,32 +82,34 @@ def delete_user_me(
     return {"message": "User account deleted successfully"}
 
 
-@router.put(
-    "/me/",
-    response_model=UserOut,
-    summary="Update current user",
-    description="Update the authenticated user's profile information",
-    tags=["Users"],
-)
-def update_user_me(
-    user_update: UserUpdate,
-    db: Session,
-    current_user: UserOut = Depends(get_current_user),
-):
-    if user_update.username:
-        current_user.username = user_update.username
-    if user_update.email:
-        if crud.get_user_by_email(db, user_email=user_update.email):
-            raise HTTPException(status_code=400, detail="email already in use")
-        current_user.email = user_update.email
-    if user_update.password:
-        current_user.password = pwd_context.hash(user_update.password)
-
-    db.add(current_user)
-    try:
-        db.commit()
-    except Exception:
-        db.rollback()
-        raise HTTPException(status_code=500, detail="Database commit failed")
-    db.refresh(current_user)
-    return schemas.UserOut.model_validate(current_user)
+# FIXIT: be able to user this function with sqlAlchemy conversions
+# @router.put(
+#     "/me/",
+#     response_model=None,
+#     summary="Update current user",
+#     description="Update the authenticated user's profile information",
+#     tags=["Users"],
+# )
+# def update_user_me(
+#     user_update: UserUpdate,
+#     db: Session,
+#     current_user: User = Depends(get_current_user),
+# ):
+#     if user_update.username:
+#         current_user.username = user_update.username
+#     if user_update.email:
+#         if crud.get_user_by_email(db, user_email=user_update.email):
+#             raise HTTPException(status_code=400, detail="email already in use")
+#         current_user.email = user_update.email
+#     if user_update.password:
+#         current_user.hashed_password = pwd_context.hash(user_update.password)
+#
+#     db.add(current_user)
+#     try:
+#         db.commit()
+#     except Exception:
+#         db.rollback()
+#         raise HTTPException(status_code=500, detail="Database commit failed")
+#     db.refresh(current_user)
+#     return {"message": "User updated successfully"}
+#
